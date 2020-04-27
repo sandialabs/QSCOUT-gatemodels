@@ -1,0 +1,25 @@
+image: python:3.7
+
+before_script:
+  - python --version
+  - ( cd .. && rm -fr jaqal-pup && git clone --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.sandia.gov/jaqal/jaqal-pup.git/  )
+  - export http_proxy=http://wwwproxy.sandia.gov:80
+  - export https_proxy=https://wwwproxy.sandia.gov:80
+  - export no_proxy=.sandia.gov
+  - pip install black
+  - ( cd ../jaqal-pup && pip install -e .[tests] )
+  - pip install -e .
+
+stages:
+  - Static Analysis
+  - Test
+
+black:
+  stage: Static Analysis
+  script:
+    - black --check .
+
+pytest:
+  stage: Test
+  script:
+    - pytest
