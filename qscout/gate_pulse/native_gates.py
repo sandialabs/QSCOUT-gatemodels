@@ -3,7 +3,7 @@ import numpy as np
 from jaqal.core import GateDefinition, Parameter, QUBIT_TYPE, FLOAT_TYPE
 
 
-def R_unitary(theta, phi):
+def U_R(theta, phi):
     """
     Generates the unitary matrix that describes the QSCOUT native R gate, which performs
     an arbitrary rotation around an axis in the X-Y plane.
@@ -27,7 +27,7 @@ def R_unitary(theta, phi):
     )
 
 
-def MS_unitary(theta, phi):
+def U_MS(theta, phi):
     """
     Generates the unitary matrix that describes the QSCOUT native Mølmer-Sørensen gate.
     This matrix is equivalent to ::
@@ -63,7 +63,7 @@ def MS_unitary(theta, phi):
     )
 
 
-def RX_unitary(phi):
+def U_Rx(phi):
     return np.array(
         [
             [np.cos(phi / 2), -1j * np.sin(phi / 2)],
@@ -72,13 +72,13 @@ def RX_unitary(phi):
     )
 
 
-def RY_unitary(phi):
+def U_Ry(phi):
     return np.array(
         [[np.cos(phi / 2), -np.sin(phi / 2)], [np.sin(phi / 2), np.cos(phi / 2)]]
     )
 
 
-def RZ_unitary(phi):
+def U_Rz(phi):
     return np.array([[1, 0], [0, np.exp(1j * phi)]])
 
 
@@ -91,49 +91,49 @@ NATIVE_GATES = (
             Parameter("axis-angle", FLOAT_TYPE),
             Parameter("rotation-angle", FLOAT_TYPE),
         ],
-        ideal_action=R_unitary,
+        ideal_unitary=U_R,
     ),
     GateDefinition(
         "Rx",
         [Parameter("q", QUBIT_TYPE), Parameter("angle", FLOAT_TYPE)],
-        ideal_action=RX_unitary,
+        ideal_unitary=U_Rx,
     ),
     GateDefinition(
         "Ry",
         [Parameter("q", QUBIT_TYPE), Parameter("angle", FLOAT_TYPE)],
-        ideal_action=RY_unitary,
+        ideal_unitary=U_Ry,
     ),
     GateDefinition(
         "Rz",
         [Parameter("q", QUBIT_TYPE), Parameter("angle", FLOAT_TYPE)],
-        ideal_action=RZ_unitary,
+        ideal_unitary=U_Rz,
     ),
     GateDefinition(
-        "Px", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RX_unitary(np.pi)
+        "Px", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rx(np.pi)
     ),
     GateDefinition(
-        "Py", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RY_unitary(np.pi)
+        "Py", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Ry(np.pi)
     ),
     GateDefinition(
-        "Pz", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RZ_unitary(np.pi)
+        "Pz", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rz(np.pi)
     ),
     GateDefinition(
-        "Sx", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RX_unitary(np.pi / 2)
+        "Sx", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rx(np.pi / 2)
     ),
     GateDefinition(
-        "Sy", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RY_unitary(np.pi / 2)
+        "Sy", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Ry(np.pi / 2)
     ),
     GateDefinition(
-        "Sz", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RZ_unitary(np.pi / 2)
+        "Sz", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rz(np.pi / 2)
     ),
     GateDefinition(
-        "Sxd", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RX_unitary(-np.pi / 2)
+        "Sxd", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rx(-np.pi / 2)
     ),
     GateDefinition(
-        "Syd", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RY_unitary(-np.pi / 2)
+        "Syd", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Ry(-np.pi / 2)
     ),
     GateDefinition(
-        "Szd", [Parameter("q", QUBIT_TYPE)], ideal_action=lambda: RZ_unitary(-np.pi / 2)
+        "Szd", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rz(-np.pi / 2)
     ),
     GateDefinition(
         "MS",
@@ -143,12 +143,12 @@ NATIVE_GATES = (
             Parameter("axis-angle", FLOAT_TYPE),
             Parameter("rotation-angle", FLOAT_TYPE),
         ],
-        ideal_action=MS_unitary,
+        ideal_unitary=U_MS,
     ),
     GateDefinition(
         "Sxx",
         [Parameter("q1", QUBIT_TYPE), Parameter("q2", QUBIT_TYPE)],
-        ideal_action=lambda: MS_unitary(np.pi, 0),
+        ideal_unitary=lambda: U_MS(np.pi, 0),
     ),
     GateDefinition("measure_all"),
 )
