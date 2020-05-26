@@ -1,7 +1,7 @@
 from unittest import TestCase
 from numbers import Number
 
-from jaqal.core import (
+from jaqalpaq.core import (
     GateDefinition,
     Register,
     ScheduledCircuit,
@@ -14,7 +14,7 @@ from jaqal.core import (
     AnnotatedValue,
 )
 from qscout.gate_pulse.native_gates import NATIVE_GATES
-from jaqal.jaqal.parser import parse_jaqal_string, Option
+from jaqalpaq.jaqal.parser import parse_jaqal_string, Option
 
 
 class ParserTester(TestCase):

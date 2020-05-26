@@ -21,7 +21,7 @@ setup(
     author_email="qscout@sandia.gov",
     packages=["qscout", "qscout.gate_pulse",],
     package_dir={"": "."},
-    install_requires=["Jaqal-pup", "numpy"],
+    install_requires=["JaqalPaq", "numpy"],
     extras_require={"tests": ["pytest"], "docs": ["sphinx"]},
     python_requires=">=3.6",
     platforms=["any"],

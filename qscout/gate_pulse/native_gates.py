@@ -1,6 +1,6 @@
 import numpy as np
 
-from jaqal.core import GateDefinition, Parameter, QUBIT_TYPE, FLOAT_TYPE
+from jaqalpaq.core import GateDefinition, Parameter, QUBIT_TYPE, FLOAT_TYPE
 
 
 def U_R(theta, phi):
