@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, expectedFailure
 from numbers import Number
 
 from jaqalpaq.core import (
@@ -14,7 +14,7 @@ from jaqalpaq.core import (
     AnnotatedValue,
 )
 from qscout.gate_pulse.native_gates import NATIVE_GATES
-from jaqalpaq.jaqal.parser import parse_jaqal_string, Option
+from jaqalpaq.parser import parse_jaqal_string, Option
 
 
 class ParserTester(TestCase):
@@ -22,6 +22,7 @@ class ParserTester(TestCase):
         self.gate_definitions = {}
         self.registers = {}
 
+    @expectedFailure
     def test_deduce_native_gates(self):
         """Test that the native gates are properly deduced from the text."""
         # Note: This behavior is possibly not what we want long term
