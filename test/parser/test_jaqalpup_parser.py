@@ -13,7 +13,7 @@ from jaqalpaq.core import (
     NamedQubit,
     AnnotatedValue,
 )
-from qscout.gate_pulse.native_gates import NATIVE_GATES
+from qscout.v1.native_gates import NATIVE_GATES
 from jaqalpaq.parser import parse_jaqal_string, Option
 
 

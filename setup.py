@@ -19,7 +19,7 @@ setup(
     version=version,
     author="Benjamin C. A. Morrison, Jay Wesley Van Der Wall, Daniel Lobser, Antonio Russo, Kenneth Rudinger, Peter Maunz",
     author_email="qscout@sandia.gov",
-    packages=["qscout", "qscout.gate_pulse",],
+    packages=["qscout", "qscout.v1",],
     package_dir={"": "."},
     install_requires=["JaqalPaq", "numpy"],
     extras_require={"tests": ["pytest"], "docs": ["sphinx"]},
