@@ -1,16 +1,10 @@
-"""QSCOUT Gate Pulse File"""
+"""QSCOUT Gate Models"""
 
 import sys
 from setuptools import setup
 
-try:
-    from sphinx.setup_command import BuildDoc
-except ImportError:
-    print("Warning: document cannot be built without sphinx")
-    BuildDoc = None
-
-name = "qscout-gpf"
-description = "QSCOUT Gate Pulse File"
+name = "QSCOUT-gatemodels"
+description = "QSCOUT Gate Models"
 version = "1.0"
 
 setup(
@@ -22,7 +16,7 @@ setup(
     packages=["qscout", "qscout.v1",],
     package_dir={"": "."},
     install_requires=["JaqalPaq", "numpy"],
-    extras_require={"tests": ["pytest"], "docs": ["sphinx"]},
+    extras_require={"tests": ["pytest"],},
     python_requires=">=3.6",
     platforms=["any"],
     url="https://qscout.sandia.gov",
@@ -36,5 +30,4 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Unix",
     ],
-    cmdclass={"build_sphinx": BuildDoc},
 )
