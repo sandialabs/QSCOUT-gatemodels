@@ -27,7 +27,7 @@ def U_R(theta, phi):
     )
 
 
-def U_MS(theta, phi):
+def U_MS(phi, theta):
     """
     Generates the unitary matrix that describes the QSCOUT native Mølmer-Sørensen gate.
     This matrix is equivalent to ::
@@ -148,7 +148,7 @@ NATIVE_GATES = (
     GateDefinition(
         "Sxx",
         [Parameter("q1", QUBIT_TYPE), Parameter("q2", QUBIT_TYPE)],
-        ideal_unitary=lambda: U_MS(np.pi, 0),
+        ideal_unitary=lambda: U_MS(0, np.pi),
     ),
     GateDefinition("measure_all"),
 )
