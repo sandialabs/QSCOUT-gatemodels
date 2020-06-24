@@ -1,6 +1,7 @@
 import numpy as np
 
-from jaqalpaq.core import GateDefinition, Parameter, QUBIT_TYPE, FLOAT_TYPE
+from jaqalpaq.core import Parameter, QUBIT_TYPE, FLOAT_TYPE
+from jaqalpaq.core.gatedef import add_idle_gates, GateDefinition, BusyGateDefinition
 
 
 def U_R(theta, phi):
@@ -82,8 +83,8 @@ def U_Rz(phi):
     return np.array([[1, 0], [0, np.exp(1j * phi)]])
 
 
-NATIVE_GATES = (
-    GateDefinition("prepare_all"),
+ACTIVE_NATIVE_GATES = (
+    BusyGateDefinition("prepare_all"),
     GateDefinition(
         "R",
         [
@@ -150,5 +151,7 @@ NATIVE_GATES = (
         [Parameter("q1", QUBIT_TYPE), Parameter("q2", QUBIT_TYPE)],
         ideal_unitary=lambda: U_MS(0, np.pi),
     ),
-    GateDefinition("measure_all"),
+    BusyGateDefinition("measure_all"),
 )
+
+NATIVE_GATES = add_idle_gates(ACTIVE_NATIVE_GATES)
