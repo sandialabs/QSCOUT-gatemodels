@@ -14,7 +14,7 @@ from jaqalpaq.core import (
     AnnotatedValue,
 )
 from qscout.v1.native_gates import NATIVE_GATES
-from jaqalpaq.parser import parse_jaqal_string, Option
+from jaqalpaq.parser import parse_jaqal_string
 
 
 class ParserTester(TestCase):
@@ -71,13 +71,17 @@ class ParserTester(TestCase):
         exp_native_gates=None,
         override_dict=None,
         native_gates=None,
-        option=Option.none,
+        expand_macro=False,
+        expand_let=False,
+        expand_let_map=False,
     ):
         act_result = parse_jaqal_string(
             text,
             override_dict=override_dict,
-            native_gates=native_gates,
-            processing_option=option,
+            expand_macro=expand_macro,
+            expand_let=expand_let,
+            expand_let_map=expand_let_map,
+            inject_pulses=native_gates,
         )
         if exp_result is not None:
             self.assertEqual(exp_result.body, act_result.body)
@@ -91,7 +95,7 @@ class ParserTester(TestCase):
     def make_circuit(*, gates, registers=None, macros=None, constants=None, maps=None):
         circuit = ScheduledCircuit()
         for gate in gates:
-            circuit.body.append(gate)
+            circuit.body.statements.append(gate)
         if registers:
             circuit.registers.update(registers)
         if macros:
@@ -124,9 +128,9 @@ class ParserTester(TestCase):
         return gate_def
 
     @staticmethod
-    def get_native_gate_definition(name, NATIVE_GATES):
+    def get_native_gate_definition(name, native_gates):
         """Return an existing GateDefinition for a native gate or raise an exception."""
-        for gate in NATIVE_GATES:
+        for gate in native_gates:
             if gate.name == name:
                 return gate
         raise ValueError(f"Native gate {name} not found")
@@ -242,40 +246,3 @@ class ParserTester(TestCase):
         if not isinstance(named_qubit, NamedQubit):
             raise TypeError(f"Register entry {name} not a named qubit")
         return named_qubit
-
-
-class TestOption(TestCase):
-    """Test the Option and OptionSet classes."""
-
-    def test_contains_self(self):
-        """Test that all options contain themselves."""
-        for opt in Option:
-            self.assertIn(opt, opt)
-
-    def test_contains_bitmask(self):
-        """Test that element containment acts like a bitmask."""
-        for opt0 in Option:
-            for opt1 in Option:
-                self.assertEqual(opt0.value & opt1.value == opt1.value, opt1 in opt0)
-
-    def test_in_option_set(self):
-        """Test that options are in an option set containing them."""
-        for opt0 in Option:
-            for opt1 in Option:
-                optset = opt0 | opt1
-                self.assertIn(opt0, optset)
-                self.assertIn(opt1, optset)
-
-    def test_combine_opt_set_with_option(self):
-        """Test that an option set combines with an option"""
-        for opt0 in Option:
-            for opt1 in Option:
-                for opt2 in Option:
-                    optset = opt0 | opt1
-                    self.assertIn(opt2, optset | opt2)
-                    self.assertIn(opt2, opt2 | optset)
-
-    def test_let_in_optionset_with_let_map(self):
-        """Test that extract_let is in an OptionSet that was created with extract_let_map but not extract_let"""
-        optset = Option.expand_macro | Option.expand_let_map
-        self.assertIn(Option.expand_let_map, optset)
