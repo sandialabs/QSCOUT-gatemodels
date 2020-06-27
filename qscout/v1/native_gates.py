@@ -1,6 +1,6 @@
 import numpy as np
 
-from jaqalpaq.core import Parameter, QUBIT_TYPE, FLOAT_TYPE
+from jaqalpaq.core import Parameter, ParamType
 from jaqalpaq.core.gatedef import add_idle_gates, GateDefinition, BusyGateDefinition
 
 
@@ -88,67 +88,67 @@ ACTIVE_NATIVE_GATES = (
     GateDefinition(
         "R",
         [
-            Parameter("q", QUBIT_TYPE),
-            Parameter("axis-angle", FLOAT_TYPE),
-            Parameter("rotation-angle", FLOAT_TYPE),
+            Parameter("q", ParamType.QUBIT),
+            Parameter("axis-angle", ParamType.FLOAT),
+            Parameter("rotation-angle", ParamType.FLOAT),
         ],
         ideal_unitary=U_R,
     ),
     GateDefinition(
         "Rx",
-        [Parameter("q", QUBIT_TYPE), Parameter("angle", FLOAT_TYPE)],
+        [Parameter("q", ParamType.QUBIT), Parameter("angle", ParamType.FLOAT)],
         ideal_unitary=U_Rx,
     ),
     GateDefinition(
         "Ry",
-        [Parameter("q", QUBIT_TYPE), Parameter("angle", FLOAT_TYPE)],
+        [Parameter("q", ParamType.QUBIT), Parameter("angle", ParamType.FLOAT)],
         ideal_unitary=U_Ry,
     ),
     GateDefinition(
         "Rz",
-        [Parameter("q", QUBIT_TYPE), Parameter("angle", FLOAT_TYPE)],
+        [Parameter("q", ParamType.QUBIT), Parameter("angle", ParamType.FLOAT)],
         ideal_unitary=U_Rz,
     ),
     GateDefinition(
-        "Px", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rx(np.pi)
+        "Px", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Rx(np.pi)
     ),
     GateDefinition(
-        "Py", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Ry(np.pi)
+        "Py", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Ry(np.pi)
     ),
     GateDefinition(
-        "Pz", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rz(np.pi)
+        "Pz", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Rz(np.pi)
     ),
     GateDefinition(
-        "Sx", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rx(np.pi / 2)
+        "Sx", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Rx(np.pi / 2)
     ),
     GateDefinition(
-        "Sy", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Ry(np.pi / 2)
+        "Sy", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Ry(np.pi / 2)
     ),
     GateDefinition(
-        "Sz", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rz(np.pi / 2)
+        "Sz", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Rz(np.pi / 2)
     ),
     GateDefinition(
-        "Sxd", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rx(-np.pi / 2)
+        "Sxd", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Rx(-np.pi / 2)
     ),
     GateDefinition(
-        "Syd", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Ry(-np.pi / 2)
+        "Syd", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Ry(-np.pi / 2)
     ),
     GateDefinition(
-        "Szd", [Parameter("q", QUBIT_TYPE)], ideal_unitary=lambda: U_Rz(-np.pi / 2)
+        "Szd", [Parameter("q", ParamType.QUBIT)], ideal_unitary=lambda: U_Rz(-np.pi / 2)
     ),
     GateDefinition(
         "MS",
         [
-            Parameter("q1", QUBIT_TYPE),
-            Parameter("q2", QUBIT_TYPE),
-            Parameter("axis-angle", FLOAT_TYPE),
-            Parameter("rotation-angle", FLOAT_TYPE),
+            Parameter("q1", ParamType.QUBIT),
+            Parameter("q2", ParamType.QUBIT),
+            Parameter("axis-angle", ParamType.FLOAT),
+            Parameter("rotation-angle", ParamType.FLOAT),
         ],
         ideal_unitary=U_MS,
     ),
     GateDefinition(
         "Sxx",
-        [Parameter("q1", QUBIT_TYPE), Parameter("q2", QUBIT_TYPE)],
+        [Parameter("q1", ParamType.QUBIT), Parameter("q2", ParamType.QUBIT)],
         ideal_unitary=lambda: U_MS(0, np.pi),
     ),
     BusyGateDefinition("measure_all"),
