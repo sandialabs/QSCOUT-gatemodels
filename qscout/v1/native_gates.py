@@ -54,7 +54,7 @@ def U_MS(phi, theta):
             [0, -1j * np.sin(theta / 2.0), np.cos(theta / 2.0), 0],
             [
                 -1j
-                * (np.cos(phi * 2.0) - 1j * np.sin(phi * 2.0))
+                * (np.cos(phi * 2.0) + 1j * np.sin(phi * 2.0))
                 * np.sin(theta / 2.0),
                 0,
                 0,
