@@ -56,7 +56,7 @@ class ParserTester(TestCase):
         text = "register r[3]; foo r[0] 1.5"
         # Make sure things we aren't doing something stupid and things will parse
         # without native gates on.
-        parse_jaqal_string(text)
+        parse_jaqal_string(text, autoload_pulses=False)
         with self.assertRaises(Exception):
             parse_jaqal_string(text, native_gates=NATIVE_GATES)
 
@@ -82,6 +82,7 @@ class ParserTester(TestCase):
             expand_let=expand_let,
             expand_let_map=expand_let_map,
             inject_pulses=native_gates,
+            autoload_pulses=False,
         )
         if exp_result is not None:
             self.assertEqual(exp_result.body, act_result.body)
