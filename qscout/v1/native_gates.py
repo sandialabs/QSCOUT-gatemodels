@@ -4,83 +4,88 @@ from jaqalpaq.core import Parameter, ParamType
 from jaqalpaq.core.gatedef import add_idle_gates, GateDefinition, BusyGateDefinition
 
 
-def U_R(theta, phi):
+def U_R(axis_angle, rotation_angle):
     """
     Generates the unitary matrix that describes the QSCOUT native R gate, which performs
     an arbitrary rotation around an axis in the X-Y plane.
 
-    :param float theta: The angle that sets the planar axis to rotate around.
-    :param float phi: The angle by which the gate rotates the state.
+    :param float axis_angle: The angle that sets the planar axis to rotate around.
+    :param float rotation_angle: The angle by which the gate rotates the state.
     :returns: The unitary gate matrix.
     :rtype: numpy.array
     """
     return np.array(
         [
             [
-                np.cos(phi / 2.0),
-                (-1j * np.cos(theta) - np.sin(theta)) * np.sin(phi / 2.0),
+                np.cos(rotation_angle / 2.0),
+                (-1j * np.cos(axis_angle) - np.sin(axis_angle))
+                * np.sin(rotation_angle / 2.0),
             ],
             [
-                (-1j * np.cos(theta) + np.sin(theta)) * np.sin(phi / 2.0),
-                np.cos(phi / 2.0),
+                (-1j * np.cos(axis_angle) + np.sin(axis_angle))
+                * np.sin(rotation_angle / 2.0),
+                np.cos(rotation_angle / 2.0),
             ],
         ]
     )
 
 
-def U_MS(phi, theta):
+def U_MS(axis_angle, rotation_angle):
     """
     Generates the unitary matrix that describes the QSCOUT native Mølmer-Sørensen gate.
     This matrix is equivalent to ::
 
-        exp(-i theta/2 (cos(phi) XI + sin(phi) YI) (cos(phi) IX + sin(phi) IY))
+        exp(-i rotation_angle/2 (cos(axis_angle) XI + sin(axis_angle) YI) (cos(axis_angle) IX + sin(axis_angle) IY))
 
-    :param float theta: The angle by which the gate rotates the state.
-    :param float phi: The phase angle determining the mix of XX and YY rotation.
+    :param float axis_angle: The phase angle determining the mix of XX and YY rotation.
+    :param float rotation_angle: The angle by which the gate rotates the state.
     :returns: The unitary gate matrix.
     :rtype: numpy.array
     """
     return np.array(
         [
             [
-                np.cos(theta / 2.0),
+                np.cos(rotation_angle / 2.0),
                 0,
                 0,
                 -1j
-                * (np.cos(phi * 2.0) - 1j * np.sin(phi * 2.0))
-                * np.sin(theta / 2.0),
+                * (np.cos(axis_angle * 2.0) - 1j * np.sin(axis_angle * 2.0))
+                * np.sin(rotation_angle / 2.0),
             ],
-            [0, np.cos(theta / 2.0), -1j * np.sin(theta / 2.0), 0],
-            [0, -1j * np.sin(theta / 2.0), np.cos(theta / 2.0), 0],
+            [0, np.cos(rotation_angle / 2.0), -1j * np.sin(rotation_angle / 2.0), 0],
+            [0, -1j * np.sin(rotation_angle / 2.0), np.cos(rotation_angle / 2.0), 0],
             [
                 -1j
-                * (np.cos(phi * 2.0) + 1j * np.sin(phi * 2.0))
-                * np.sin(theta / 2.0),
+                * (np.cos(axis_angle * 2.0) + 1j * np.sin(axis_angle * 2.0))
+                * np.sin(rotation_angle / 2.0),
                 0,
                 0,
-                np.cos(theta / 2.0),
+                np.cos(rotation_angle / 2.0),
             ],
         ]
     )
 
 
-def U_Rx(phi):
+def U_Rx(rotation_angle):
     return np.array(
         [
-            [np.cos(phi / 2), -1j * np.sin(phi / 2)],
-            [-1j * np.sin(phi / 2), np.cos(phi / 2)],
+            [np.cos(rotation_angle / 2), -1j * np.sin(rotation_angle / 2)],
+            [-1j * np.sin(rotation_angle / 2), np.cos(rotation_angle / 2)],
         ]
     )
 
 
-def U_Ry(phi):
+def U_Ry(rotation_angle):
     return np.array(
-        [[np.cos(phi / 2), -np.sin(phi / 2)], [np.sin(phi / 2), np.cos(phi / 2)]]
+        [
+            [np.cos(rotation_angle / 2), -np.sin(rotation_angle / 2)],
+            [np.sin(rotation_angle / 2), np.cos(rotation_angle / 2)],
+        ]
     )
 
 
-def U_Rz(phi):
-    return np.array([[1, 0], [0, np.exp(1j * phi)]])
+def U_Rz(rotation_angle):
+    return np.array([[1, 0], [0, np.exp(1j * rotation_angle)]])
 
 
 ACTIVE_NATIVE_GATES = (
@@ -149,7 +154,7 @@ ACTIVE_NATIVE_GATES = (
     GateDefinition(
         "Sxx",
         [Parameter("q1", ParamType.QUBIT), Parameter("q2", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_MS(0, np.pi),
+        ideal_unitary=lambda: U_MS(0, np.pi / 2),
     ),
     BusyGateDefinition("measure_all"),
 )
