@@ -1,4 +1,4 @@
-from unittest import TestCase, expectedFailure
+from unittest import TestCase
 from numbers import Number
 
 from jaqalpaq.core import (
@@ -21,25 +21,6 @@ class ParserTester(TestCase):
     def setUp(self):
         self.gate_definitions = {}
         self.registers = {}
-
-    @expectedFailure
-    def test_deduce_native_gates(self):
-        """Test that the native gates are properly deduced from the text."""
-        # Note: This behavior is possibly not what we want long term
-        text = "register r[3]; foo 1 r[0]; bar 3.14"
-        exp_native_gates = {
-            "foo": self.get_gate_definition(
-                "foo",
-                [
-                    self.make_parameter(index=0, kind="float"),
-                    self.make_parameter(index=1, kind="qubit"),
-                ],
-            ),
-            "bar": self.get_gate_definition(
-                "bar", [self.make_parameter(index=0, kind="float")]
-            ),
-        }
-        self.run_test(text, exp_native_gates=exp_native_gates)
 
     def test_use_native_gates(self):
         """Test that we can use the native gates in the QSCOUT native gate set."""
