@@ -144,8 +144,8 @@ ACTIVE_NATIVE_GATES = (
     GateDefinition(
         "MS",
         [
+            Parameter("q0", ParamType.QUBIT),
             Parameter("q1", ParamType.QUBIT),
-            Parameter("q2", ParamType.QUBIT),
             Parameter("axis-angle", ParamType.FLOAT),
             Parameter("rotation-angle", ParamType.FLOAT),
         ],
@@ -153,7 +153,7 @@ ACTIVE_NATIVE_GATES = (
     ),
     GateDefinition(
         "Sxx",
-        [Parameter("q1", ParamType.QUBIT), Parameter("q2", ParamType.QUBIT)],
+        [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
         ideal_unitary=lambda: U_MS(0, np.pi / 2),
     ),
     BusyGateDefinition("measure_all"),
