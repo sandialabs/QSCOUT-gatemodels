@@ -1,10 +1,8 @@
-QSCOUT Gate Models 1.0.0b0
---------------------------
-
-# QSCOUT
+QSCOUT Gate Models
+------------------
 
 The [Quantum Scientific Computing Open User Testbed
-(QSCOUT)](https://qscout.sandia.gov/) is a 5 year DOE program to build a
+(QSCOUT)](https://qscout.sandia.gov/) is a five-year DOE program to build a
 quantum testbed based on trapped ions that is available to the research
 community. As an open platform, it will not only provide full specifications
 and control for the realization of all high level quantum and classical
@@ -18,11 +16,19 @@ it allows JaqalPaq to emulate Jaqal programs targeting QSCOUT hardware.
 
 ## Installation
 
-QSCOUT is available on [GitLab](https://gitlab.com/jaqal/qscout-gatemodels).  Use the
-package manager [pip](https://pip.pypa.io/en/stable/) to install it.
+The QSCOUT Gate Models package is available on
+[GitLab](https://gitlab.com/jaqal/qscout-gatemodels).
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install it.
 
 ```bash
 pip install qscout-gatemodels
+```
+
+[pyGSTi](https://www.pygsti.info/) is used to perform forward simulations, and
+is a recommended dependency.
+
+```bash
+pip install pygsti
 ```
 
 ## License
