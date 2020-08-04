@@ -1,11 +1,11 @@
 """QSCOUT Gate Models"""
 
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 
 name = "QSCOUT-gatemodels"
 description = "QSCOUT Gate Models"
-version = "1.0"
+version = "1.0.0b0"
 
 setup(
     name=name,
@@ -13,7 +13,7 @@ setup(
     version=version,
     author="Benjamin C. A. Morrison, Jay Wesley Van Der Wall, Daniel Lobser, Antonio Russo, Kenneth Rudinger, Peter Maunz",
     author_email="qscout@sandia.gov",
-    packages=["qscout", "qscout.v1",],
+    packages=find_packages(include=["qscout", "qscout.*"]),
     package_dir={"": "."},
     install_requires=["JaqalPaq", "numpy"],
     extras_require={"tests": ["pytest"],},
@@ -21,10 +21,10 @@ setup(
     platforms=["any"],
     url="https://qscout.sandia.gov",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
         "Topic :: Scientific/Engineering :: Physics",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: MacOS :: MacOS X",
