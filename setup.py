@@ -10,6 +10,8 @@ version = "1.0.0b0"
 setup(
     name=name,
     description=description,
+    long_description=open("README.md", "r").read(),
+    long_description_content_type="text/markdown",
     version=version,
     author="Benjamin C. A. Morrison, Jay Wesley Van Der Wall, Daniel Lobser, Antonio Russo, Kenneth Rudinger, Peter Maunz",
     author_email="qscout@sandia.gov",
