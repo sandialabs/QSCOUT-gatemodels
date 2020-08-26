@@ -5,15 +5,12 @@ import numpy as np
 
 import pygsti
 
-from jaqalpaq.core import Parameter, ParamType
-from jaqalpaq.core.gatedef import add_idle_gates, GateDefinition, BusyGateDefinition
-
 from jaqalpaq.emulator.pygsti.noisygatedef import (
     curry_op_factory_class,
-    NoisyGateDefinition,
+    create_NOISY_GATES,
 )
 
-from .native_gates import U_R, U_Rx, U_Ry, U_Rz, U_MS
+from .native_gates import U_R, U_Rx, U_Ry, U_Rz, U_MS, ACTIVE_NATIVE_GATES
 
 
 depolarization = 1e-3
@@ -25,15 +22,19 @@ class RadialRotationOpFactory(pygsti.obj.OpFactory):
     def __init__(self):
         pygsti.obj.OpFactory.__init__(self, dim=4, evotype="densitymx")
 
+    def jaqal_duration(self, args=None, sslbls=None):
+        rotation = float(args[1])
+        return rotation / (np.pi / 2)
+
     def create_object(self, args=None, sslbls=None):
-        assert (
-            sslbls is None
-        )  # don't worry about sslbls for now -- these are for factories that can create gates placed at arbitrary circuit locations
+        # don't worry about sslbls for now -- these are for factories that can create
+        # gates placed at arbitrary circuit locations
+        assert sslbls is None
         assert len(args) == 2
         phase = float(args[0])
         rotation = float(args[1])
 
-        duration = rotation / (np.pi / 2)
+        duration = self.jaqal_duration(args, sslbls)
 
         scaled_rotation_error = rotation_error * duration
         depolarization_term = (1 - depolarization) ** duration
@@ -49,17 +50,20 @@ class MSRotationOpFactory(pygsti.obj.OpFactory):
     def __init__(self):
         pygsti.obj.OpFactory.__init__(self, dim=16, evotype="densitymx")
 
+    def jaqal_duration(self, args=None, sslbls=None):
+        # Assume MS pi/2 gate 10 times longer than Sx, Sy, Sz
+        rotation = float(args[1])
+        return 10 * rotation / (np.pi / 2)
+
     def create_object(self, args=None, sslbls=None):
-        assert (
-            sslbls is None
-        )  # don't worry about sslbls for now -- these are for factories that can create gates placed at arbitrary circuit locations
+        # don't worry about sslbls for now -- these are for factories that can create
+        # gates placed at arbitrary circuit locations
+        assert sslbls is None
         assert len(args) == 2
         phase = float(args[0])
         rotation = float(args[1])
 
-        duration = (
-            10 * rotation / (np.pi / 2)
-        )  # Assume MS pi/2 gate 10 times longer than Sx, Sy, Sz
+        duration = self.jaqal_duration(args, sslbls)
 
         scaled_rotation_error = rotation_error * duration
         depolarization_term = (1 - depolarization) ** duration
@@ -75,14 +79,18 @@ class AxialRotationOpFactory(pygsti.obj.OpFactory):
     def __init__(self):
         pygsti.obj.OpFactory.__init__(self, dim=4, evotype="densitymx")
 
+    def jaqal_duration(self, args=None, sslbls=None):
+        rotation = float(args[0])
+        return rotation / (np.pi / 2)
+
     def create_object(self, args=None, sslbls=None):
-        assert (
-            sslbls is None
-        )  # don't worry about sslbls for now -- these are for factories that can create gates placed at arbitrary circuit locations
+        # don't worry about sslbls for now -- these are for factories that can create
+        # gates placed at arbitrary circuit locations
+        assert sslbls is None
         assert len(args) == 1
         rotation = float(args[0])
 
-        duration = rotation / (np.pi / 2)
+        duration = self.jaqal_duration(args, sslbls)
 
         scaled_rotation_error = rotation_error * duration
         depolarization_term = (1 - depolarization) ** duration
@@ -98,14 +106,18 @@ class IdleOpFactory(pygsti.obj.OpFactory):
     def __init__(self):
         pygsti.obj.OpFactory.__init__(self, dim=4, evotype="densitymx")
 
+    def jaqal_duration(self, args=None, sslbls=None):
+        rotation = float(args[0])
+        return rotation / (np.pi / 2)
+
     def create_object(self, args=None, sslbls=None):
-        assert (
-            sslbls is None
-        )  # don't worry about sslbls for now -- these are for factories that can create gates placed at arbitrary circuit locations
+        # don't worry about sslbls for now -- these are for factories that can create
+        # gates placed at arbitrary circuit locations
+        assert sslbls is None
         assert len(args) == 1
         rotation = float(args[0])
 
-        duration = rotation / (np.pi / 2)
+        duration = self.jaqal_duration(args, sslbls)
 
         depolarization_term = (1 - depolarization) ** duration
 
@@ -120,17 +132,20 @@ class MSIdleOpFactory(pygsti.obj.OpFactory):
     def __init__(self):
         pygsti.obj.OpFactory.__init__(self, dim=16, evotype="densitymx")
 
+    def jaqal_duration(self, args=None, sslbls=None):
+        # Assume MS pi/2 gate 10 times longer than Sx, Sy, Sz
+        rotation = float(args[1])
+        return 10 * rotation / (np.pi / 2)
+
     def create_object(self, args=None, sslbls=None):
-        assert (
-            sslbls is None
-        )  # don't worry about sslbls for now -- these are for factories that can create gates placed at arbitrary circuit locations
+        # don't worry about sslbls for now -- these are for factories that can create
+        # gates placed at arbitrary circuit locations
+        assert sslbls is None
         assert len(args) == 2
         phase = float(args[0])
         rotation = float(args[1])
 
-        duration = (
-            10 * rotation / (np.pi / 2)
-        )  # Assume MS pi/2 gate 10 times longer than Sx, Sy, Sz
+        duration = self.jaqal_duration(args, sslbls)
 
         depolarization_term = (1 - depolarization) ** duration
 
@@ -139,120 +154,24 @@ class MSIdleOpFactory(pygsti.obj.OpFactory):
         return pygsti.obj.StaticDenseOp(super_op)
 
 
-ACTIVE_NATIVE_GATES = (
-    BusyGateDefinition("prepare_all"),
-    NoisyGateDefinition(
-        "R",
-        [
-            Parameter("q", ParamType.QUBIT),
-            Parameter("axis-angle", ParamType.FLOAT),
-            Parameter("rotation-angle", ParamType.FLOAT),
-        ],
-        ideal_unitary=U_R,
-        noisy_operation=RadialRotationOpFactory(),
-    ),
-    NoisyGateDefinition(
-        "Rx",
-        [Parameter("q", ParamType.QUBIT), Parameter("angle", ParamType.FLOAT)],
-        ideal_unitary=U_Rx,
-        noisy_operation=curry_op_factory_class(RadialRotationOpFactory, (0.0, None))(),
-    ),
-    NoisyGateDefinition(
-        "Ry",
-        [Parameter("q", ParamType.QUBIT), Parameter("angle", ParamType.FLOAT)],
-        ideal_unitary=U_Ry,
-        noisy_operation=curry_op_factory_class(
-            RadialRotationOpFactory, (np.pi / 2, None)
-        )(),
-    ),
-    NoisyGateDefinition(
-        "Rz",
-        [Parameter("q", ParamType.QUBIT), Parameter("angle", ParamType.FLOAT)],
-        ideal_unitary=U_Rz,
-        noisy_operation=AxialRotationOpFactory(),
-    ),
-    NoisyGateDefinition(
-        "Px",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Rx(np.pi),
-        noisy_operation=curry_op_factory_class(RadialRotationOpFactory, (0.0, np.pi))(),
-    ),
-    NoisyGateDefinition(
-        "Py",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Ry(np.pi),
-        noisy_operation=curry_op_factory_class(
-            RadialRotationOpFactory, (np.pi / 2, np.pi)
-        )(),
-    ),
-    NoisyGateDefinition(
-        "Pz",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Rz(np.pi),
-        noisy_operation=curry_op_factory_class(AxialRotationOpFactory, (np.pi,))(),
-    ),
-    NoisyGateDefinition(
-        "Sx",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Rx(np.pi / 2),
-        noisy_operation=curry_op_factory_class(
-            RadialRotationOpFactory, (0.0, np.pi / 2)
-        )(),
-    ),
-    NoisyGateDefinition(
-        "Sy",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Ry(np.pi / 2),
-        noisy_operation=curry_op_factory_class(
-            RadialRotationOpFactory, (np.pi / 2, np.pi / 2)
-        )(),
-    ),
-    NoisyGateDefinition(
-        "Sz",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Rz(np.pi / 2),
-        noisy_operation=curry_op_factory_class(AxialRotationOpFactory, (np.pi / 2,))(),
-    ),
-    NoisyGateDefinition(
-        "Sxd",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Rx(-np.pi / 2),
-        noisy_operation=curry_op_factory_class(
-            RadialRotationOpFactory, (0.0, -np.pi / 2)
-        )(),
-    ),
-    NoisyGateDefinition(
-        "Syd",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Ry(-np.pi / 2),
-        noisy_operation=curry_op_factory_class(
-            RadialRotationOpFactory, (np.pi / 2, -np.pi / 2)
-        )(),
-    ),
-    NoisyGateDefinition(
-        "Szd",
-        [Parameter("q", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_Rz(-np.pi / 2),
-        noisy_operation=curry_op_factory_class(AxialRotationOpFactory, (np.pi / 2,))(),
-    ),
-    NoisyGateDefinition(
-        "MS",
-        [
-            Parameter("q0", ParamType.QUBIT),
-            Parameter("q1", ParamType.QUBIT),
-            Parameter("axis-angle", ParamType.FLOAT),
-            Parameter("rotation-angle", ParamType.FLOAT),
-        ],
-        ideal_unitary=U_MS,
-        noisy_operation=MSRotationOpFactory(),
-    ),
-    NoisyGateDefinition(
-        "Sxx",
-        [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
-        ideal_unitary=lambda: U_MS(0, np.pi / 2),
-        noisy_operation=curry_op_factory_class(MSRotationOpFactory, (0.0, np.pi / 2))(),
-    ),
-    BusyGateDefinition("measure_all"),
-)
+idle_operation = IdleOpFactory()
 
-NATIVE_GATES = add_idle_gates(ACTIVE_NATIVE_GATES)
+
+NOISY_GATES = create_NOISY_GATES(
+    ACTIVE_NATIVE_GATES,
+    R=RadialRotationOpFactory(),
+    Rx=curry_op_factory_class(RadialRotationOpFactory, (0.0, None))(),
+    Ry=curry_op_factory_class(RadialRotationOpFactory, (np.pi / 2, None))(),
+    Rz=AxialRotationOpFactory(),
+    Px=curry_op_factory_class(RadialRotationOpFactory, (0.0, np.pi))(),
+    Py=curry_op_factory_class(RadialRotationOpFactory, (np.pi / 2, np.pi))(),
+    Pz=curry_op_factory_class(AxialRotationOpFactory, (np.pi,))(),
+    Sx=curry_op_factory_class(RadialRotationOpFactory, (0.0, np.pi / 2))(),
+    Sy=curry_op_factory_class(RadialRotationOpFactory, (np.pi / 2, np.pi / 2))(),
+    Sz=curry_op_factory_class(AxialRotationOpFactory, (np.pi / 2,))(),
+    Sxd=curry_op_factory_class(RadialRotationOpFactory, (0.0, -np.pi / 2))(),
+    Syd=curry_op_factory_class(RadialRotationOpFactory, (np.pi / 2, -np.pi / 2))(),
+    Szd=curry_op_factory_class(AxialRotationOpFactory, (np.pi / 2,))(),
+    MS=MSRotationOpFactory(),
+    Sxx=curry_op_factory_class(MSRotationOpFactory, (0.0, np.pi / 2))(),
+)
