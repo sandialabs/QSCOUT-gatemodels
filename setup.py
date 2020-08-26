@@ -18,7 +18,7 @@ setup(
     packages=find_packages(include=["qscout", "qscout.*"]),
     package_dir={"": "."},
     install_requires=["JaqalPaq", "numpy"],
-    extras_require={"tests": ["pytest"],},
+    extras_require={"tests": ["pytest"]},
     python_requires=">=3.6",
     platforms=["any"],
     url="https://qscout.sandia.gov",
