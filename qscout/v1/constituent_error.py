@@ -24,7 +24,7 @@ class RadialRotationOpFactory(pygsti.obj.OpFactory):
 
     def jaqal_duration(self, args=None, sslbls=None):
         rotation = float(args[1])
-        return rotation / (np.pi / 2)
+        return np.abs(rotation) / (np.pi / 2)
 
     def create_object(self, args=None, sslbls=None):
         # don't worry about sslbls for now -- these are for factories that can create
@@ -53,7 +53,7 @@ class MSRotationOpFactory(pygsti.obj.OpFactory):
     def jaqal_duration(self, args=None, sslbls=None):
         # Assume MS pi/2 gate 10 times longer than Sx, Sy, Sz
         rotation = float(args[1])
-        return 10 * rotation / (np.pi / 2)
+        return 10 * np.abs(rotation) / (np.pi / 2)
 
     def create_object(self, args=None, sslbls=None):
         # don't worry about sslbls for now -- these are for factories that can create
@@ -81,7 +81,7 @@ class AxialRotationOpFactory(pygsti.obj.OpFactory):
 
     def jaqal_duration(self, args=None, sslbls=None):
         rotation = float(args[0])
-        return rotation / (np.pi / 2)
+        return np.abs(rotation) / (np.pi / 2)
 
     def create_object(self, args=None, sslbls=None):
         # don't worry about sslbls for now -- these are for factories that can create
@@ -108,7 +108,7 @@ class IdleOpFactory(pygsti.obj.OpFactory):
 
     def jaqal_duration(self, args=None, sslbls=None):
         rotation = float(args[0])
-        return rotation / (np.pi / 2)
+        return np.abs(rotation) / (np.pi / 2)
 
     def create_object(self, args=None, sslbls=None):
         # don't worry about sslbls for now -- these are for factories that can create
@@ -135,7 +135,7 @@ class MSIdleOpFactory(pygsti.obj.OpFactory):
     def jaqal_duration(self, args=None, sslbls=None):
         # Assume MS pi/2 gate 10 times longer than Sx, Sy, Sz
         rotation = float(args[1])
-        return 10 * rotation / (np.pi / 2)
+        return 10 * np.abs(rotation) / (np.pi / 2)
 
     def create_object(self, args=None, sslbls=None):
         # don't worry about sslbls for now -- these are for factories that can create
