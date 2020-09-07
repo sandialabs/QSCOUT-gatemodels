@@ -3,6 +3,7 @@
 # certain rights in this software.
 import numpy as np
 
+from jaqalpaq.core.circuit import normalize_native_gates
 from jaqalpaq.core import Parameter, ParamType
 from jaqalpaq.core.gatedef import add_idle_gates, GateDefinition, BusyGateDefinition
 
@@ -162,4 +163,5 @@ ACTIVE_NATIVE_GATES = (
     BusyGateDefinition("measure_all"),
 )
 
+ACTIVE_NATIVE_GATES = normalize_native_gates(ACTIVE_NATIVE_GATES)
 NATIVE_GATES = add_idle_gates(ACTIVE_NATIVE_GATES)

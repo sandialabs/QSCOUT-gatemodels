@@ -92,7 +92,7 @@ class ParserTester(TestCase):
         """Make a gate that is either native or not. Don't call directly."""
         arg_objects = [self.make_argument_object(arg) for arg in args]
         if native_gates:
-            gate_def = self.get_native_gate_definition(name, native_gates)
+            gate_def = native_gates[name]
         else:
             params = [
                 self.make_parameter_from_arg(idx, arg) for idx, arg in enumerate(args)
@@ -108,14 +108,6 @@ class ParserTester(TestCase):
         else:
             gate_def = self.gate_definitions[name]
         return gate_def
-
-    @staticmethod
-    def get_native_gate_definition(name, native_gates):
-        """Return an existing GateDefinition for a native gate or raise an exception."""
-        for gate in native_gates:
-            if gate.name == name:
-                return gate
-        raise ValueError(f"Native gate {name} not found")
 
     def make_argument_object(self, arg):
         """Format an argument as the GateStatement constructor expects it."""
