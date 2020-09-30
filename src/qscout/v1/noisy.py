@@ -6,6 +6,7 @@ from numpy import abs, diag, pi, kron
 import pygsti
 
 from .native_gates import U_R, U_Rz, U_MS, NATIVE_GATES
+from .std import stretched
 from jaqalpaq.emulator.pygsti import AbstractNoisyNativeEmulator
 
 
@@ -13,7 +14,8 @@ class SNLToy1(AbstractNoisyNativeEmulator):
     """Version 1 error model of the QSCOUT native gates."""
 
     # This tells AbstractNoisyNativeEmulator what gate set we're modeling:
-    jaqal_gates = NATIVE_GATES
+    jaqal_gates = NATIVE_GATES.copy()
+    jaqal_gates.update(stretched.NATIVE_GATES)
 
     def __init__(self, *args, **kwargs):
         """Builds a MyCustomEmulator instance for particular parameters
@@ -39,12 +41,12 @@ class SNLToy1(AbstractNoisyNativeEmulator):
     # For every gate, we need to specify a superoperator and a duration:
 
     # GJR
-    def gateduration_R(self, q, axis_angle, rotation_angle):
-        return abs(rotation_angle) / (pi / 2)
+    def gateduration_R(self, q, axis_angle, rotation_angle, stretch=1):
+        return stretch * abs(rotation_angle) / (pi / 2)
 
-    def gate_R(self, q, axis_angle, rotation_angle):
+    def gate_R(self, q, axis_angle, rotation_angle, stretch=1):
         # We model the decoherence and over-rotation as a function of the gate duration:
-        duration = self.gateduration_R(q, axis_angle, rotation_angle)
+        duration = self.gateduration_R(q, axis_angle, rotation_angle, stretch)
 
         # I.e., we scale the rotation and depolarization error by the time
         scaled_rotation_error = self.rotation_error * duration
@@ -56,12 +58,14 @@ class SNLToy1(AbstractNoisyNativeEmulator):
         ) @ diag([1, depolarization_term, depolarization_term, depolarization_term])
 
     # GJMS
-    def gateduration_MS(self, q0, q1, axis_angle, rotation_angle):
+    def gateduration_MS(self, q0, q1, axis_angle, rotation_angle, stretch=1):
         # Assume MS pi/2 gate 10 times longer than Sx, Sy, Sz
-        return 10 * abs(rotation_angle) / (pi / 2)
+        return stretch * 10 * abs(rotation_angle) / (pi / 2)
 
-    def gate_MS(self, q0, q1, axis_angle, rotation_angle):
-        duration = self.gateduration_MS(q0, q1, axis_angle, rotation_angle)
+    def gate_MS(self, q0, q1, axis_angle, rotation_angle, stretch=1):
+        duration = self.gateduration_MS(
+            q0, q1, axis_angle, rotation_angle, stretch=stretch
+        )
 
         scaled_rotation_error = self.rotation_error * duration
         depolarization_term = (1 - self.depolarization) ** duration
@@ -74,10 +78,10 @@ class SNLToy1(AbstractNoisyNativeEmulator):
 
     # Rz is performed entirely in software.
     # GJRz
-    def gateduration_Rz(self, q, angle):
+    def gateduration_Rz(self, q, angle, stretch=1):
         return 0
 
-    def gate_Rz(self, q, angle):
+    def gate_Rz(self, q, angle, stretch=1):
         return pygsti.unitary_to_pauligate(U_Rz(angle))
 
     # A process matrix for the idle behavior of a qubit.
