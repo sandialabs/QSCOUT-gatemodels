@@ -3,4 +3,4 @@
 # certain rights in this software.
 __import__("pkg_resources").declare_namespace(__name__)
 
-__version__ = "1.0.0rc2"
+__version__ = "1.0.0rc3"
