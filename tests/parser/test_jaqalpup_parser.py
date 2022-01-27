@@ -13,7 +13,7 @@ from jaqalpaq.core import (
     NamedQubit,
     AnnotatedValue,
 )
-from qscout.v1.native_gates import NATIVE_GATES
+from qscout.v1.std.jaqal_gates import ALL_GATES
 from jaqalpaq.parser import parse_jaqal_string
 
 
@@ -27,9 +27,9 @@ class ParserTester(TestCase):
         text = "register r[3]; Rx r[0] 1.5"
         exp_result = self.make_circuit(
             registers={"r": self.make_register("r", 3)},
-            gates=[self.make_gate("Rx", ("r", 0), 1.5, native_gates=NATIVE_GATES)],
+            gates=[self.make_gate("Rx", ("r", 0), 1.5, native_gates=ALL_GATES)],
         )
-        self.run_test(text, exp_result, native_gates=NATIVE_GATES)
+        self.run_test(text, exp_result, native_gates=ALL_GATES)
 
     def test_fail_on_missing_native_gate(self):
         """Test that we fail when the using qscout native gates and the user uses a gate
@@ -39,7 +39,7 @@ class ParserTester(TestCase):
         # without native gates on.
         parse_jaqal_string(text, autoload_pulses=False)
         with self.assertRaises(Exception):
-            parse_jaqal_string(text, native_gates=NATIVE_GATES)
+            parse_jaqal_string(text, native_gates=ALL_GATES)
 
     ##
     # Helper methods

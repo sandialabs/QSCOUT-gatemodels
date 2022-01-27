@@ -92,7 +92,7 @@ def U_Rz(rotation_angle):
     return np.array([[1, 0], [0, np.exp(1j * rotation_angle)]])
 
 
-ACTIVE_NATIVE_GATES = (
+ACTIVE_GATES = (
     BusyGateDefinition("prepare_all"),
     GateDefinition(
         "R",
@@ -163,5 +163,5 @@ ACTIVE_NATIVE_GATES = (
     BusyGateDefinition("measure_all"),
 )
 
-ACTIVE_NATIVE_GATES = normalize_native_gates(ACTIVE_NATIVE_GATES)
-NATIVE_GATES = add_idle_gates(ACTIVE_NATIVE_GATES)
+ACTIVE_GATES = normalize_native_gates(ACTIVE_GATES)
+ALL_GATES = add_idle_gates(ACTIVE_GATES)

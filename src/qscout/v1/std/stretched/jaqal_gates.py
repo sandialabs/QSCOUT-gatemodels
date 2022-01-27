@@ -5,10 +5,10 @@ from numpy import abs, diag, pi, kron
 
 import pygsti
 
-from . import NATIVE_GATES
+from .. import jaqal_gates
 from jaqalpaq.core.stretch import stretched_gates
 
-NATIVE_GATES = NATIVE_GATES.copy()
-del NATIVE_GATES["prepare_all"]
-del NATIVE_GATES["measure_all"]
-NATIVE_GATES = stretched_gates(NATIVE_GATES, suffix="_stretched")
+ALL_GATES = jaqal_gates.ALL_GATES.copy()
+del ALL_GATES["prepare_all"]
+del ALL_GATES["measure_all"]
+ALL_GATES = stretched_gates(ALL_GATES, suffix="_stretched")

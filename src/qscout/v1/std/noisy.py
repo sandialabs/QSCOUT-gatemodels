@@ -5,8 +5,8 @@ from numpy import abs, diag, pi, kron
 
 import pygsti
 
-from .native_gates import U_R, U_Rz, U_MS, NATIVE_GATES
-from .std import stretched
+from .jaqal_gates import U_R, U_Rz, U_MS, ALL_GATES
+from .stretched import jaqal_gates as stretched
 from jaqalpaq.emulator.pygsti import AbstractNoisyNativeEmulator
 
 
@@ -14,8 +14,8 @@ class SNLToy1(AbstractNoisyNativeEmulator):
     """Version 1 error model of the QSCOUT native gates."""
 
     # This tells AbstractNoisyNativeEmulator what gate set we're modeling:
-    jaqal_gates = NATIVE_GATES.copy()
-    jaqal_gates.update(stretched.NATIVE_GATES)
+    jaqal_gates = ALL_GATES.copy()
+    jaqal_gates.update(stretched.ALL_GATES)
 
     def __init__(self, *args, **kwargs):
         """Builds a MyCustomEmulator instance for particular parameters
