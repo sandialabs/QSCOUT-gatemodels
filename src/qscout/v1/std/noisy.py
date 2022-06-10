@@ -5,7 +5,8 @@ from numpy import abs, diag, pi, kron
 
 import pygsti
 
-from .jaqal_gates import U_R, U_Rz, U_MS, ALL_GATES
+from .jaqal_gates import ALL_GATES
+from .jaqal_action import U_R, U_Rz, U_MS
 from .stretched import jaqal_gates as stretched
 from jaqalpaq.emulator.pygsti import AbstractNoisyNativeEmulator
 
