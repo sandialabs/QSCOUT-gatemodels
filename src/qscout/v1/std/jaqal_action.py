@@ -1,4 +1,4 @@
-from .jaqal_gates import ALL_GATES
+from .jaqal_gates import ALL_GATES, ACTIVE_GATES
 
 import numpy as np
 
@@ -105,8 +105,5 @@ IDEAL_ACTION = dict(
     Sxx=lambda: U_MS(0, np.pi / 2),
 )
 
-for name in list(IDEAL_ACTION.keys()):
+for name in list(ACTIVE_GATES.keys()):
     IDEAL_ACTION[f"I_{name}"] = None
-
-IDEAL_ACTION["prepare_all"] = None
-IDEAL_ACTION["measure_all"] = None

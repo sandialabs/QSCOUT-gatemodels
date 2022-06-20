@@ -9,7 +9,6 @@ from .. import std
 
 
 ACTIVE_GATES = (
-    BusyGateDefinition("prepare_all"),
     GateDefinition(
         "R",
         [
@@ -52,8 +51,15 @@ ACTIVE_GATES = (
         "Sxx",
         [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
     ),
-    BusyGateDefinition("measure_all"),
 )
 
 ACTIVE_GATES = normalize_native_gates(ACTIVE_GATES, origin=std.__name__)
 ALL_GATES = add_idle_gates(ACTIVE_GATES)
+
+SUBCIRCUIT_DEFINERS = (
+    BusyGateDefinition("prepare_all", unitary=False),
+    BusyGateDefinition("measure_all", unitary=False),
+)
+
+SUBCIRCUIT_DEFINERS = normalize_native_gates(SUBCIRCUIT_DEFINERS, origin=std.__name__)
+ALL_GATES.update(SUBCIRCUIT_DEFINERS)
