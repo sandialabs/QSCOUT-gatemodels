@@ -89,7 +89,9 @@ class SNLToy1(AbstractNoisyNativeEmulator):
     def idle(self, q, duration):
         depolarization_term = (1 - self.depolarization) ** duration
 
-        return diag([1, depolarization_term, depolarization_term, depolarization_term])
+        return diag(
+            [1.0, depolarization_term, depolarization_term, depolarization_term]
+        )  # WARNING: array must be of dtype=float
 
     # Instead of copy-pasting the above definitions, use _curry to create new methods
     # with some arguments.  None is a special argument that means: require an argument
