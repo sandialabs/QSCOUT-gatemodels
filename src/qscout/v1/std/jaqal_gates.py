@@ -6,6 +6,7 @@ import numpy as np
 from jaqalpaq.core.circuit import normalize_native_gates
 from jaqalpaq.core import Parameter, ParamType
 from jaqalpaq.core.gatedef import add_idle_gates, GateDefinition, BusyGateDefinition
+from .. import std
 
 
 def U_R(axis_angle, rotation_angle):
@@ -163,5 +164,5 @@ ACTIVE_GATES = (
     BusyGateDefinition("measure_all"),
 )
 
-ACTIVE_GATES = normalize_native_gates(ACTIVE_GATES)
+ACTIVE_GATES = normalize_native_gates(ACTIVE_GATES, origin=std.__name__)
 ALL_GATES = add_idle_gates(ACTIVE_GATES)
