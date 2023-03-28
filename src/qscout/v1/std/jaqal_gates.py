@@ -8,6 +8,22 @@ from jaqalpaq.core.gatedef import add_idle_gates, GateDefinition, BusyGateDefini
 from .. import std
 
 
+# Backwards-compatible import of jaqal_action
+__bc_names = set(["np", "U_R", "U_MS", "U_Rx", "U_Ry", "U_Rz"])
+
+
+def __getattr__(name):
+    if name not in __bc_names:
+        raise AttributeError(f"module '{name}' has no attribute '{name}'")
+
+    import warnings
+
+    warnings.warn("U_* gates are now in .jaqal_action", DeprecationWarning)
+    from . import jaqal_action
+
+    return getattr(jaqal_action, name)
+
+
 ACTIVE_GATES = (
     GateDefinition(
         "R",
