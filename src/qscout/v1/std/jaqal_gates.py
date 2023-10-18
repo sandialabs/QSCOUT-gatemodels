@@ -55,6 +55,14 @@ ACTIVE_GATES = (
     GateDefinition("Syd", [Parameter("q", ParamType.QUBIT)]),
     GateDefinition("Szd", [Parameter("q", ParamType.QUBIT)]),
     GateDefinition(
+        "ZZ",
+        [
+            Parameter("q0", ParamType.QUBIT),
+            Parameter("q1", ParamType.QUBIT),
+            Parameter("rotation-angle", ParamType.FLOAT),
+        ],
+    ),
+    GateDefinition(
         "MS",
         [
             Parameter("q0", ParamType.QUBIT),

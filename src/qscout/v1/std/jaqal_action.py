@@ -29,6 +29,29 @@ def U_R(axis_angle, rotation_angle):
     )
 
 
+def U_ZZ(rotation_angle):
+    """
+    Generates the unitary matrix that describes the QSCOUT native ZZ gate.
+
+    :param float rotation_angle: The angle by which the gate rotates the state.
+    :returns: The unitary gate matrix.
+    :rtype: numpy.array
+    """
+
+    cr = np.cos(rotation_angle / 2.0)
+    sr = np.sin(rotation_angle / 2.0) * 1j
+    # fmt: off
+    return np.array(
+        [
+            [ cr-sr,   0  ,   0  ,   0   ],
+            [   0  , cr+sr,   0  ,   0   ],
+            [   0  ,   0  , cr+sr,   0   ],
+            [   0  ,   0  ,   0  , cr-sr ],
+        ]
+    )
+    # fmt: on
+
+
 def U_MS(axis_angle, rotation_angle):
     """
     Generates the unitary matrix that describes the QSCOUT native Mølmer-Sørensen gate.
@@ -101,6 +124,7 @@ IDEAL_ACTION = dict(
     Sxd=lambda: U_Rx(-np.pi / 2),
     Syd=lambda: U_Ry(-np.pi / 2),
     Szd=lambda: U_Rz(-np.pi / 2),
+    ZZ=U_ZZ,
     MS=U_MS,
     Sxx=lambda: U_MS(0, np.pi / 2),
 )
