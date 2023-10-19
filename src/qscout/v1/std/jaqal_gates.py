@@ -34,6 +34,14 @@ ACTIVE_GATES = (
         ],
     ),
     GateDefinition(
+        "Rt",
+        [
+            Parameter("q", ParamType.QUBIT),
+            Parameter("axis-angle", ParamType.FLOAT),
+            Parameter("rotation-angle", ParamType.FLOAT),
+        ],
+    ),
+    GateDefinition(
         "Rx",
         [Parameter("q", ParamType.QUBIT), Parameter("angle", ParamType.FLOAT)],
     ),
@@ -55,6 +63,22 @@ ACTIVE_GATES = (
     GateDefinition("Syd", [Parameter("q", ParamType.QUBIT)]),
     GateDefinition("Szd", [Parameter("q", ParamType.QUBIT)]),
     GateDefinition(
+        "XX",
+        [
+            Parameter("q0", ParamType.QUBIT),
+            Parameter("q1", ParamType.QUBIT),
+            Parameter("rotation-angle", ParamType.FLOAT),
+        ],
+    ),
+    GateDefinition(
+        "YY",
+        [
+            Parameter("q0", ParamType.QUBIT),
+            Parameter("q1", ParamType.QUBIT),
+            Parameter("rotation-angle", ParamType.FLOAT),
+        ],
+    ),
+    GateDefinition(
         "ZZ",
         [
             Parameter("q0", ParamType.QUBIT),
@@ -72,7 +96,27 @@ ACTIVE_GATES = (
         ],
     ),
     GateDefinition(
+        "Szz",
+        [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
+    ),
+    GateDefinition(
+        "Szzd",
+        [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
+    ),
+    GateDefinition(
         "Sxx",
+        [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
+    ),
+    GateDefinition(
+        "Sxxd",
+        [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
+    ),
+    GateDefinition(
+        "Syy",
+        [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
+    ),
+    GateDefinition(
+        "Syyd",
         [Parameter("q0", ParamType.QUBIT), Parameter("q1", ParamType.QUBIT)],
     ),
 )
