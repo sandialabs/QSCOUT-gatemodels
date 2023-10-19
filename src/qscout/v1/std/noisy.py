@@ -6,7 +6,7 @@ from numpy import abs, diag, pi, kron
 import pygsti
 
 from .jaqal_gates import ALL_GATES
-from .jaqal_action import U_R, U_Rz, U_MS
+from .jaqal_action import U_R, U_Rz, U_MS, U_XX, U_YY, U_ZZ
 from .stretched import jaqal_gates as stretched
 from jaqalpaq.emulator.pygsti import AbstractNoisyNativeEmulator
 
@@ -57,6 +57,61 @@ class SNLToy1(AbstractNoisyNativeEmulator):
         return pygsti.unitary_to_pauligate(
             U_R(axis_angle + self.phase_error, rotation_angle + scaled_rotation_error)
         ) @ diag([1, depolarization_term, depolarization_term, depolarization_term])
+
+    # GJRt
+    gateduration_Rt = gateduration_R
+    gate_Rt = gate_R
+
+    # GJXX
+    def gateduration_XX(self, q0, q1, rotation_angle, stretch=1):
+        # Assume XX pi/2 gate 10 times longer than Sx, Sy, Sz
+        return stretch * 10 * abs(rotation_angle) / (pi / 2)
+
+    def gate_XX(self, q0, q1, rotation_angle, stretch=1):
+        duration = self.gateduration_XX(q0, q1, rotation_angle, stretch=stretch)
+
+        scaled_rotation_error = self.rotation_error * duration
+        depolarization_term = (1 - self.depolarization) ** duration
+
+        return pygsti.unitary_to_pauligate(
+            U_XX(rotation_angle + scaled_rotation_error)
+        ) @ kron(
+            diag([1] + 3 * [depolarization_term]), diag([1] + 3 * [depolarization_term])
+        )
+
+    # GJYY
+    def gateduration_YY(self, q0, q1, rotation_angle, stretch=1):
+        # Assume YY pi/2 gate 10 times longer than Sx, Sy, Sz
+        return stretch * 10 * abs(rotation_angle) / (pi / 2)
+
+    def gate_YY(self, q0, q1, rotation_angle, stretch=1):
+        duration = self.gateduration_YY(q0, q1, rotation_angle, stretch=stretch)
+
+        scaled_rotation_error = self.rotation_error * duration
+        depolarization_term = (1 - self.depolarization) ** duration
+
+        return pygsti.unitary_to_pauligate(
+            U_YY(rotation_angle + scaled_rotation_error)
+        ) @ kron(
+            diag([1] + 3 * [depolarization_term]), diag([1] + 3 * [depolarization_term])
+        )
+
+    # GJZZ
+    def gateduration_ZZ(self, q0, q1, rotation_angle, stretch=1):
+        # Assume ZZ pi/2 gate 10 times longer than Sx, Sy, Sz
+        return stretch * 10 * abs(rotation_angle) / (pi / 2)
+
+    def gate_ZZ(self, q0, q1, rotation_angle, stretch=1):
+        duration = self.gateduration_ZZ(q0, q1, rotation_angle, stretch=stretch)
+
+        scaled_rotation_error = self.rotation_error * duration
+        depolarization_term = (1 - self.depolarization) ** duration
+
+        return pygsti.unitary_to_pauligate(
+            U_ZZ(rotation_angle + scaled_rotation_error)
+        ) @ kron(
+            diag([1] + 3 * [depolarization_term]), diag([1] + 3 * [depolarization_term])
+        )
 
     # GJMS
     def gateduration_MS(self, q0, q1, axis_angle, rotation_angle, stretch=1):
@@ -110,6 +165,11 @@ class SNLToy1(AbstractNoisyNativeEmulator):
     gateduration_Sxd, gate_Sxd = C((None, 0.0, -pi / 2), gateduration_R, gate_R)
     gateduration_Syd, gate_Syd = C((None, pi / 2, -pi / 2), gateduration_R, gate_R)
     gateduration_Szd, gate_Szd = C((None, -pi / 2), gateduration_Rz, gate_Rz)
-    gateduration_Sxx, gate_Sxx = C((None, None, 0.0, pi / 2), gateduration_MS, gate_MS)
+    gateduration_Sxx, gate_Sxx = C((None, None, pi / 2), gateduration_XX, gate_XX)
+    gateduration_Sxxd, gate_Sxxd = C((None, None, -pi / 2), gateduration_XX, gate_XX)
+    gateduration_Syy, gate_Syy = C((None, None, pi / 2), gateduration_YY, gate_YY)
+    gateduration_Syyd, gate_Syyd = C((None, None, -pi / 2), gateduration_YY, gate_YY)
+    gateduration_Szz, gate_Szz = C((None, None, pi / 2), gateduration_ZZ, gate_ZZ)
+    gateduration_Szzd, gate_Szzd = C((None, None, -pi / 2), gateduration_ZZ, gate_ZZ)
 
     del C
