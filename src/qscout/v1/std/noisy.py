@@ -60,7 +60,23 @@ class SNLToy1(AbstractNoisyNativeEmulator):
 
     # GJRt
     gateduration_Rt = gateduration_R
-    gate_Rt = gate_R
+
+    def gate_Rt(self, q, axis_angle, rotation_angle, stretch=1):
+        # We model the decoherence and over-rotation as a function of the gate duration:
+        duration = self.gateduration_Rt(q, axis_angle, rotation_angle, stretch)
+
+        # We increase the noise to model the behavior of the physical hardware
+        # Change noise model for Rt to be 2x worse (3x the noise)
+        duration *= 3
+
+        # I.e., we scale the rotation and depolarization error by the time
+        scaled_rotation_error = self.rotation_error * duration
+        depolarization_term = (1 - self.depolarization) ** duration
+
+        # Combine these all, returning a superoperator in the Pauli basis
+        return pygsti.unitary_to_pauligate(
+            U_R(axis_angle + self.phase_error, rotation_angle + scaled_rotation_error)
+        ) @ diag([1, depolarization_term, depolarization_term, depolarization_term])
 
     # GJXX
     def gateduration_XX(self, q0, q1, rotation_angle, stretch=1):
